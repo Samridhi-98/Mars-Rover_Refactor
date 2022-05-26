@@ -1,50 +1,49 @@
 package mars.rover;
 
+import exception.InvalidCoordinatesExceptions;
+
 public class MarsRover {
 
     private int x;
     private int y;
-    private String direction;
+    private Direction direction;
 
-    public MarsRover(int x, int y, String direction) {
+    public MarsRover(int x, int y, Direction direction) {
         this.x = x;
         this.y = y;
         this.direction = direction;
     }
 
-    public String move(String instructions, Position boundary) {
-//        char instruction = instructions.charAt(0);
-//        if (instruction == 'L') {
-//            if (direction == 'N') {
-//                return move(x, y, 'W', instructions.substring(1, instructions.length()));
-//            } else if (direction == 'W') {
-//                return move(x, y, 'S', instructions.substring(1, instructions.length()));
-//            } else if (direction == 'S') {
-//                return move(x, y, 'E', instructions.substring(1, instructions.length()));
-//            } else if (direction == 'E') {
-//                return move(x, y, 'N', instructions.substring(1, instructions.length()));
-//            }
-//        } else if (instruction == 'R') {
-//            if (direction == 'N') {
-//                return move(x, y, 'E', instructions.substring(1, instructions.length()));
-//            } else if (direction == 'W') {
-//                return move(x, y, 'N', instructions.substring(1, instructions.length()));
-//            } else if (direction == 'S') {
-//                return move(x, y, 'W', instructions.substring(1, instructions.length()));
-//            } else if (direction == 'E') {
-//                return move(x, y, 'S', instructions.substring(1, instructions.length()));
-//            }
-//        } else if (instruction == 'M') {
-//            if (direction == 'N') {
-//                return move(x, y + 1, 'N', instructions.substring(1, instructions.length()));
-//            } else if (direction == 'S') {
-//                return move(x, y - 1, 'S', instructions.substring(1, instructions.length()));
-//            } else if (direction == 'W') {
-//                return move(x - 1, y, 'W', instructions.substring(1, instructions.length()));
-//            } else if (direction == 'E') {
-//                return move(x + 1, y, 'E', instructions.substring(1, instructions.length()));
-//            }
-//        }
-        return x + " " + y + " " + direction;
+    public MarsRover move(String instructions, Position boundary) throws InvalidCoordinatesExceptions {
+        if(boundary.getXCoordinate() < 0 || boundary.getYCoordinate() < 0){
+            throw new InvalidCoordinatesExceptions();
+        }
+        MarsRover newPosition = this;
+        for(int index=0;index<instructions.length();index++){
+            char moveDirection = instructions.charAt(index);
+            if(moveDirection == 'L' || moveDirection == 'R'){
+                newPosition = findNewDirectionToMove(moveDirection, newPosition);
+            }
+            else if(moveDirection == 'M'){
+                newPosition = findNextPositionToMove(boundary, newPosition);
+            }
+        }
+        return newPosition;
+    }
+
+    private MarsRover findNewDirectionToMove(char moveDirection, MarsRover currentPosition) {
+        Direction newDirectionOfRover = (moveDirection == 'L') ? currentPosition.direction.getNextLeftDirection() : currentPosition.direction.getNextRightDirection();
+        return new MarsRover(currentPosition.x, currentPosition.y, newDirectionOfRover);
+    }
+
+    private MarsRover findNextPositionToMove(Position boundary, MarsRover currentPosition) {
+        Position bufferPosition = currentPosition.direction.getBufferPosition();
+        Position newPositionAfterNextMove = new Position(bufferPosition.getXCoordinate() + currentPosition.x,bufferPosition.getYCoordinate()+ currentPosition.y);
+
+        return new MarsRover(newPositionAfterNextMove.getXCoordinate(),newPositionAfterNextMove.getYCoordinate(),currentPosition.direction);
+    }
+
+    public String finalPositionOfRover(){
+        return this.x + " " +this. y + " " + this.direction;
     }
 }
