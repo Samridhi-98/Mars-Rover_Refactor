@@ -17,6 +17,7 @@ public class PlateauTest {
     @Test
     public void shouldThrowExceptionForZeroLengthInstruction() throws InvalidCoordinatesExceptions, NoInstructionFoundException {
         Plateau plateau = new Plateau(5,5,new MarsRover(1,5,Direction.N));
+
         assertThrows(NoInstructionFoundException.class,() -> plateau.moveRover(""));
     }
 
