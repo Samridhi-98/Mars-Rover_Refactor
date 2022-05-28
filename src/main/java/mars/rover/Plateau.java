@@ -8,17 +8,17 @@ public class Plateau {
     private MarsRover rover;
 
     public Plateau(int xCoordinate, int yCoordinate, MarsRover rover) throws InvalidCoordinatesExceptions {
-        if(xCoordinate <= 0 || yCoordinate <= 0){
+        if (xCoordinate <= 0 || yCoordinate <= 0) {
             throw new InvalidCoordinatesExceptions();
         }
-        position = new Position(xCoordinate,yCoordinate);
+        position = new Position(xCoordinate, yCoordinate);
         this.rover = rover;
     }
 
     public MarsRover moveRover(String instructions) throws NoInstructionFoundException, InvalidCoordinatesExceptions {
-        if(instructions.length() <= 0) {
+        if (instructions.length() <= 0) {
             throw new NoInstructionFoundException();
         }
-        return rover.move(instructions,position);
+        return rover.move(instructions, position);
     }
 }

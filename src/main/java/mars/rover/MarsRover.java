@@ -15,16 +15,15 @@ public class MarsRover {
     }
 
     public MarsRover move(String instructions, Position boundary) throws InvalidCoordinatesExceptions {
-        if(boundary.getXCoordinate() < 0 || boundary.getYCoordinate() < 0){
+        if (boundary.getXCoordinate() < 0 || boundary.getYCoordinate() < 0) {
             throw new InvalidCoordinatesExceptions();
         }
         MarsRover newPosition = this;
-        for(int index=0;index<instructions.length();index++){
+        for (int index = 0; index < instructions.length(); index++) {
             char moveDirection = instructions.charAt(index);
-            if(moveDirection == 'L' || moveDirection == 'R'){
+            if (moveDirection == 'L' || moveDirection == 'R') {
                 newPosition = findNewDirectionToMove(moveDirection, newPosition);
-            }
-            else if(moveDirection == 'M'){
+            } else if (moveDirection == 'M') {
                 newPosition = findNextPositionToMove(boundary, newPosition);
             }
         }
@@ -38,12 +37,23 @@ public class MarsRover {
 
     private MarsRover findNextPositionToMove(Position boundary, MarsRover currentPosition) {
         Position bufferPosition = currentPosition.direction.getBufferPosition();
-        Position newPositionAfterNextMove = new Position(bufferPosition.getXCoordinate() + currentPosition.x,bufferPosition.getYCoordinate()+ currentPosition.y);
+        Position newPositionAfterNextMove = new Position(bufferPosition.getXCoordinate() + currentPosition.x, bufferPosition.getYCoordinate() + currentPosition.y);
 
-        return new MarsRover(newPositionAfterNextMove.getXCoordinate(),newPositionAfterNextMove.getYCoordinate(),currentPosition.direction);
+        if (checkIfPositionExistInBoundaryOrNot(newPositionAfterNextMove, boundary)) {
+            return new MarsRover(newPositionAfterNextMove.getXCoordinate(), newPositionAfterNextMove.getYCoordinate(), currentPosition.direction);
+        }
+
+        return currentPosition;
     }
 
-    public String finalPositionOfRover(){
-        return this.x + " " +this. y + " " + this.direction;
+    private boolean checkIfPositionExistInBoundaryOrNot(Position newPosition, Position boundary) {
+        if (newPosition.getXCoordinate() < 0 || newPosition.getXCoordinate() >= boundary.getXCoordinate() || newPosition.getYCoordinate() < 0 || newPosition.getYCoordinate() >= boundary.getYCoordinate()) {
+            return false;
+        }
+        return true;
+    }
+
+    public String finalPositionOfRover() {
+        return this.x + " " + this.y + " " + this.direction;
     }
 }
